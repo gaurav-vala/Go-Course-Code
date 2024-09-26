@@ -92,6 +92,103 @@ expectedReturn := 5.5
 
 ## We can format the Output Strings with Printf() Method
 
+- there are different option to add to the output string that can format it
+- here we have `%v` and `\n` that helped to add the variable value and also with `\n` everything after it will be on next line
+- There are many of these “verbs that we can add to format, check the official docs
+- We can use `%.0f` to round the floating numbers
+- the number before f refers to the number we wanna show after the .
+- so if we say `%.2f` that will print 2 number after .
+-
+
 ```go
 fmt.Printf("Future Value : %v\nFuture Value (Adjusted for Inflation): %v", futureValue, futureRealValue)
+```
+
+## Storing Formatted strings into a variable
+
+- using the method `Sprintf()` we can store any formatted string into a variable and then use that variable instead of whole string
+
+```go
+formattedFV := fmt.Sprintf("Future Value : %.0f\n", futureValue)
+formattedFRV := fmt.Sprintf("Future Value (Adjusted for Inflation): %0.f\n", futureRealValue)
+```
+
+- after that we can use the Print() method to print these strings which will just print the string without any formatting
+
+```go
+fmt.Print(formattedFV, formattedFRV)
+```
+
+## Multi line Strings
+
+- We can use backticks ```` instead of double quotes to create multiline formatted string, this way
+
+```go
+fmt.Printf(`Future Value : %v
+Future Value (Adjusted for Inflation): %v`, futureValue, futureRealValue)
+```
+
+## Defining Functions
+
+- all the user defined Functions are defined below the `main` function
+- a function in Go can be defined using `func` keyword
+- We can add parameters to the function, when adding parameters we have to define the type of the parameter
+
+```go
+func outputText(text1 string, text2 string){
+	fmt.Print()
+}
+```
+
+- if the parameters are of same type then we can define the parameter and have the type only once, then we have to add the parameter name and at the end add the type of the parameter
+
+```go
+func outputText(text1, text2 string) {
+	fmt.Print()
+}
+```
+
+- After that we can use it like any other function in any language
+
+```go
+outputText("Investment Amount: ")
+fmt.Scan(&investmentAmount)
+
+func outputText(text1 string) {
+	fmt.Print(text1)
+}
+```
+
+- in Go lang, we can return multiple values from a single function
+- In Go, variables are block scoped, which means any variables defined inside the function or block are scoped to that function and we can use them outside the function
+- We can define the variables outside the main function or any other function to have them as global scope and then we can use them inside any function in the file.
+- We can only define const and var declaration as global declaration, we cannot do this to any other declaration
+- That means `:=` syntax cannot be used in the global scope
+
+```go
+const inflationRate = 2.5
+
+func main() {
+	var investmentAmount float64 = 1000
+	var years float64
+	var expectedReturn = 5.5
+}
+```
+
+- when returning any value, we have to define the return type of the function
+- If we are returning 2 values we have to wrap it into rounded parenthesis, and then define the type of specific return to its type
+- with this we can define specific types to any return value `func demo ()(float64, int){}`
+
+```go
+func calculateFutureValue(investmentAmount, expectedReturn, years float64) (float64, float64) {
+	fv := (investmentAmount) * math.Pow(1+expectedReturn/100, float64(years))
+	rfv := fv / math.Pow(1+inflationRate/100, years)
+	return fv, rfv
+}
+```
+
+- when we want to store the return values in the variable, we can have 2 variable by comma separated variable names
+
+```go
+futureValue, futureRealValue := calculateFutureValue(investmentAmount, expectedReturn, years)
 ```
