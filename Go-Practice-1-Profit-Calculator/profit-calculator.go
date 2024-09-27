@@ -7,8 +7,8 @@ func main() {
 	var expenses float64
 	var tax_rate float64
 
-	fmt.Print("Enter your Renvenue: ")
-	fmt.Scan(&revenue)
+	// fmt.Print("Enter your Renvenue: ")
+	// fmt.Scan(&revenue)
 
 	fmt.Print("Enter your Expenses: ")
 	fmt.Scan(&expenses)
@@ -24,4 +24,14 @@ func main() {
 	fmt.Println(profit)
 	fmt.Println(ratio)
 
+}
+
+// Function Practice
+func getUserInput(inputString string) float64 {
+	var inputValue float64
+
+	fmt.Print(inputString)
+	fmt.Scan(&inputValue)
+
+	return inputValue
 }
