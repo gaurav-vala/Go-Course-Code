@@ -1,6 +1,17 @@
 package main
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+	"os"
+)
+
+// Goals
+// 1) Validate User Input
+//  => Show error & exit if invalid input is provided
+// 		- No Negative numbers
+// 		- Not 0
+//  2) Store Calculated results into file
 
 func main() {
 	// var revenue float64
@@ -10,29 +21,68 @@ func main() {
 	// fmt.Print("Enter your Renvenue: ")
 	// fmt.Scan(&revenue)
 
-	revenue := getUserInput("Enter your Revenue: ")
-	expenses := getUserInput("Enter your Expenses: ")
-	tax_rate := getUserInput("Enter the Tax Rate: ")
+	for {
+		revenue, err1 := getUserInput("Enter your Revenue: ")
+		// os.WriteFile("profit.txt", []byte(revenue), 0644)
 
-	// fmt.Print("Enter your Expenses: ")
-	// fmt.Scan(&expenses)
-	// fmt.Print("Enter the Tax rate: ")
-	// fmt.Scan(&tax_rate)
+		if err1 != nil {
+			fmt.Println(err1)
+			fmt.Println("==========")
+			return
+		}
 
-	ebt, profit, ratio := calculateFinances(revenue, expenses, tax_rate)
+		expenses, err2 := getUserInput("Enter your Expenses: ")
 
-	fmt.Printf("%.1f\n", ebt)
-	fmt.Printf("%.1f\n", profit)
-	fmt.Printf("%.1f", ratio)
+		if err2 != nil {
+			fmt.Println(err2)
+			fmt.Println("==========")
+			return
+		}
+
+		tax_rate, err3 := getUserInput("Enter the Tax Rate: ")
+
+		if err3 != nil {
+			fmt.Println(err3)
+			fmt.Println("==========")
+			return
+		}
+
+		// if err1 != nil || err2 != nil || err3 != nil {
+		// 	fmt.Println(err1)
+		// 	fmt.Println("==========")
+		// 	return
+		// }
+
+		// fmt.Print("Enter your Expenses: ")
+		// fmt.Scan(&expenses)
+		// fmt.Print("Enter the Tax rate: ")
+		// fmt.Scan(&tax_rate)
+
+		ebt, profit, ratio := calculateFinances(revenue, expenses, tax_rate)
+
+		fmt.Printf("%.1f\n", ebt)
+		fmt.Printf("%.1f\n", profit)
+		fmt.Printf("%.1f", ratio)
+
+		storeProfit(ebt, profit, ratio)
+	}
 
 }
 
+func storeProfit(ebt, profit, ratio float64) {
+	results := fmt.Sprintf("EBT: %.1f\nProfit: %.1f\nRatio: %.3f\n", ebt, profit, ratio)
+	os.WriteFile("results.txt", []byte(results), 0644)
+}
+
 // Function Practice
-func getUserInput(inputString string) float64 {
+func getUserInput(inputString string) (float64, error) {
 	var inputValue float64
 	fmt.Print(inputString)
 	fmt.Scan(&inputValue)
-	return inputValue
+	if inputValue <= 0 {
+		return 0, errors.New(">>> Input value is invalid")
+	}
+	return inputValue, nil
 }
 
 func calculateFinances(revenue, expenses, tax_rate float64) (float64, float64, float64) {
