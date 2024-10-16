@@ -1,36 +1,15 @@
 package main
 
 import (
-	"errors"
 	"fmt"
-	"os"
-	"strconv"
+
+	"example.com/bank/fileops"
 )
 
-func writeBalanceFiles(balance float64) {
-	balanceText := fmt.Sprint(balance)
-	os.WriteFile("balance.txt", []byte(balanceText), 0644)
-}
-
-func readFile() (float64, error) {
-	data, err := os.ReadFile("balance.txt")
-
-	if err != nil {
-		return 1000, errors.New("failed to find balance file")
-	}
-
-	balanceText := string(data)
-	balance, _ := strconv.ParseFloat(balanceText, 64)
-
-	if err != nil {
-		return 1000, errors.New("failed to parsed stored balance value")
-	}
-
-	return balance, nil
-}
+const accountBalanceFile = "balance.txt"
 
 func main() {
-	var accountBalance, err = readFile()
+	var accountBalance, err = fileops.GetFLoatFromFile(accountBalanceFile)
 
 	if err != nil {
 		fmt.Println("ERROR")
@@ -41,13 +20,7 @@ func main() {
 
 	fmt.Println("Welcome to GO Bank!")
 	for {
-		fmt.Println("===============")
-		fmt.Println("What do you want to do?")
-		fmt.Println("1. Check Balance")
-		fmt.Println("2. Deposit Money")
-		fmt.Println("3. Withdraw Money")
-		fmt.Println("4. Exit")
-		fmt.Println("===============")
+		presentOptions()
 
 		var choice int
 		fmt.Print("Your Choice ")
@@ -78,7 +51,7 @@ func main() {
 			}
 			accountBalance += depositAmount // same as accountBalance = accountBalance + depositAmount
 			fmt.Println("Balance Updated! New Balance:", accountBalance)
-			writeBalanceFiles(accountBalance)
+			fileops.WriteFloatToFile(accountBalance, accountBalanceFile)
 		} else if choice == 3 {
 			fmt.Print("Withdrawal Amount:")
 			var withdrawalAmount float64
@@ -93,12 +66,11 @@ func main() {
 			}
 			accountBalance -= withdrawalAmount
 			fmt.Println("Money Withdrawn! New Balance:", accountBalance)
-			writeBalanceFiles(accountBalance)
+			fileops.WriteFloatToFile(accountBalance, accountBalanceFile)
 		} else {
 			fmt.Print("Goodbye!")
 			break
 		}
 	}
 	fmt.Println("Thanks for choosing our Bank!")
-
 }
